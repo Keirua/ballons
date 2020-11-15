@@ -32,7 +32,7 @@ impl BalloonDeck {
     }
 
     fn fill(&mut self) {
-        for i in 0..5 {
+        for _ in 0..5 {
             for c in &[
                 Balloons::Red,
                 Balloons::Yellow,
@@ -64,17 +64,16 @@ impl ActionDeck {
             Some(card) => {
                 // Si on a une carte, on a distribue
                 self.returned_cards.push(card);
-                return card;
-            },
+                card
+            }
             None => {
                 // S’il n’y a plus de cartes, on retourne la pioche,
                 // on la mélange et distribue la première carte
                 self.cards = self.returned_cards.clone();
                 self.returned_cards.clear();
-                return self.deal();
+                self.deal()
             }
         }
-
     }
 
     pub fn shuffle(&mut self) {
@@ -82,7 +81,7 @@ impl ActionDeck {
     }
 
     pub fn fill(&mut self) {
-        for i in 0..5 {
+        for _ in 0..5 {
             for c in &[
                 ActionCard::Red,
                 ActionCard::Yellow,
@@ -93,12 +92,11 @@ impl ActionDeck {
                 self.cards.push(*c);
             }
         }
-        for i in 0..self.nb_parent_cards {
+        for _ in 0..self.nb_parent_cards {
             self.cards.push(ActionCard::Parent);
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -109,7 +107,7 @@ mod tests {
     #[test]
     fn test_greet() {
         let mut d = ActionDeck::new(3, thread_rng());
-        for i in 0..100 {
+        for _ in 0..100 {
             d.deal();
         }
     }

@@ -29,6 +29,10 @@ impl Player {
         self.nb_cards += 1;
     }
 
+    pub fn has_lost(&self) -> bool {
+        self.returned_balloons.len() == self.nb_cards
+    }
+
     pub fn play_card(&mut self, c: ActionCard) {
         match c {
             ActionCard::Red => self.burst(Balloons::Red),
@@ -61,7 +65,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_greet() {
+    fn test_run_game() {
         let mut p = Player::new();
         p.deal(Balloons::Red);
         p.deal(Balloons::Green);
@@ -78,5 +82,21 @@ mod tests {
         assert_eq!(1, *p.ballons.entry(Balloons::Green).or_insert(0));
         assert_eq!(0, *p.ballons.entry(Balloons::Violet).or_insert(0));
         assert_eq!(0, *p.ballons.entry(Balloons::Yellow).or_insert(0));
+    }
+
+    #[test]
+    fn test_has_lost() {
+        let mut p = Player::new();
+        p.deal(Balloons::Red);
+        p.deal(Balloons::Green);
+
+        p.burst(Balloons::Blue);
+        p.burst(Balloons::Red);
+
+        assert_eq!(false, p.has_lost());
+        p.burst(Balloons::Red);
+        assert_eq!(false, p.has_lost());
+        p.burst(Balloons::Green);
+        assert_eq!(true, p.has_lost());
     }
 }

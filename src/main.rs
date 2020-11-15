@@ -27,7 +27,7 @@ impl BalloonGame {
     ) -> BalloonGame {
         let rng = thread_rng();
 
-        let mut balloonGame = BalloonGame {
+        let mut balloon_game = BalloonGame {
             nb_players,
             nb_balloons_per_player,
             players: Vec::with_capacity(nb_players),
@@ -36,11 +36,11 @@ impl BalloonGame {
         };
 
         for _ in 0..nb_players {
-            balloonGame.players.push(Player::new());
+            balloon_game.players.push(Player::new());
         }
-        balloonGame.action_deck.shuffle();
+        balloon_game.action_deck.shuffle();
 
-        return balloonGame;
+        return balloon_game;
     }
 
     pub fn deal_cards(&mut self) {
@@ -54,6 +54,13 @@ impl BalloonGame {
                 }
             }
         }
+    }
+
+    pub fn run_game(&mut self) -> usize {
+    	let mut nb_cards = 0;
+
+    	
+    	nb_cards
     }
 }
 
@@ -69,8 +76,8 @@ fn main() {
     // p.recover();
     // p.burst(Balloons::Yellow);
 
-    let mut balloonGame = BalloonGame::new(2, 5, 5);
-    balloonGame.deal_cards();
+    let mut balloon_game = BalloonGame::new(2, 5, 5);
+    balloon_game.deal_cards();
 
-    println!("{:#?}", balloonGame);
+    println!("{}", balloon_game.run_game());
 }
