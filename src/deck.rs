@@ -71,6 +71,7 @@ impl ActionDeck {
                 // on la mélange et distribue la première carte
                 self.cards = self.returned_cards.clone();
                 self.returned_cards.clear();
+                self.shuffle();
                 self.deal()
             }
         }
