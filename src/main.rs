@@ -1,8 +1,14 @@
+extern crate rand;
 
 mod ballons;
 mod player;
 use ballons::{Balloons, ActionCard};
 use player::Player;
+
+
+
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 struct BalloonGame {
 	nb_players: usize,
@@ -22,16 +28,25 @@ impl BalloonGame {
 	}
 }
 
-pub fn create_balloon_deck() -> Vec<Balloons> {
-	let mut deck:Vec<Balloons> = Vec::new();
-	for i in 0..5 {
-		for c in &[Balloons::Red, Balloons::Yellow, Balloons::Blue, Balloons::Green, Balloons::Violet] {
-			deck.push(*c);
-		}
-	}
-
-	deck
+struct BalloonDeck {
+	cards: Vec<Balloons>
 }
+
+impl BalloonDeck {
+	pub fn new() -> BalloonDeck {
+		let mut deck = BalloonDeck{
+			cards: Vec::new()
+		};
+		for i in 0..5 {
+			for c in &[Balloons::Red, Balloons::Yellow, Balloons::Blue, Balloons::Green, Balloons::Violet] {
+				deck.cards.push(*c);
+			}
+		}
+
+		deck
+	}	
+}
+
 
 pub fn create_action_deck(nb_parent_cards:usize) -> Vec<ActionCard> {
 	let mut deck:Vec<ActionCard> = Vec::new();
@@ -61,9 +76,13 @@ fn main() {
 
 	let balloonGame = BalloonGame::new(2, 5, 5);
 
-	let balloon_deck = create_balloon_deck();
+	// let mut balloon_deck = create_balloon_deck();
 	let action_deck = create_action_deck(5);
+	let balloon_deck = BalloonDeck::new();
+	
+	// let mut rng = thread_rng();
+	// balloon_deck.shuffle(&mut rng);
     println!("{:?}", p);
-    println!("{:?}", balloon_deck);
+    // println!("{:?}", balloon_deck);
     println!("{:?}", action_deck);
 }
