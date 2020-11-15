@@ -28,8 +28,15 @@ impl BalloonGame {
 	}
 }
 
+#[derive(Debug)]
 struct BalloonDeck {
 	cards: Vec<Balloons>
+}
+
+#[derive(Debug)]
+struct ActionDeck {
+	cards: Vec<ActionCard>,
+	nb_parent_cards: usize
 }
 
 impl BalloonDeck {
@@ -37,31 +44,43 @@ impl BalloonDeck {
 		let mut deck = BalloonDeck{
 			cards: Vec::new()
 		};
-		for i in 0..5 {
-			for c in &[Balloons::Red, Balloons::Yellow, Balloons::Blue, Balloons::Green, Balloons::Violet] {
-				deck.cards.push(*c);
-			}
-		}
+		deck.fill();
 
 		deck
-	}	
-}
+	}
 
-
-pub fn create_action_deck(nb_parent_cards:usize) -> Vec<ActionCard> {
-	let mut deck:Vec<ActionCard> = Vec::new();
-	for i in 0..5 {
-		for c in &[ActionCard::Red, ActionCard::Yellow, ActionCard::Blue, ActionCard::Green, ActionCard::Violet] {
-			deck.push(*c);
+	fn fill(&mut self) {
+		for i in 0..5 {
+			for c in &[Balloons::Red, Balloons::Yellow, Balloons::Blue, Balloons::Green, Balloons::Violet] {
+				self.cards.push(*c);
+			}
 		}
 	}
-	for i in 0..nb_parent_cards {
-		deck.push(ActionCard::Parent);
-	}
-
-	deck
 }
 
+impl ActionDeck {
+	pub fn new(nb_parent_cards:usize) -> ActionDeck {
+		let mut deck = ActionDeck{
+			cards: Vec::new(),
+			nb_parent_cards: nb_parent_cards
+		};
+		deck.fill();
+
+		deck
+	}
+
+	pub fn fill(&mut self) {
+		for i in 0..5 {
+			for c in &[ActionCard::Red, ActionCard::Yellow, ActionCard::Blue, ActionCard::Green, ActionCard::Violet] {
+				self.cards.push(*c);
+			}
+		}
+		for i in 0..self.nb_parent_cards {
+			self.cards.push(ActionCard::Parent);
+		}
+	}
+
+}
 fn main() {
 	let mut p = Player::new();
 	// p.deal(Balloons::Red);
@@ -77,7 +96,8 @@ fn main() {
 	let balloonGame = BalloonGame::new(2, 5, 5);
 
 	// let mut balloon_deck = create_balloon_deck();
-	let action_deck = create_action_deck(5);
+	// let action_deck = create_action_deck(5);
+	let action_deck = ActionDeck::new(5);
 	let balloon_deck = BalloonDeck::new();
 	
 	// let mut rng = thread_rng();
