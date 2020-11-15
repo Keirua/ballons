@@ -32,18 +32,19 @@ impl BalloonGame {
             nb_balloons_per_player,
             players: Vec::with_capacity(nb_players),
             action_deck: ActionDeck::new(nb_parent_cards, rng),
-            rng: rng,
+            rng,
         };
 
         for _ in 0..nb_players {
             balloon_game.players.push(Player::new());
         }
+        balloon_game.deal_cards();
         balloon_game.action_deck.shuffle();
 
-        return balloon_game;
+        balloon_game
     }
 
-    pub fn deal_cards(&mut self) {
+    fn deal_cards(&mut self) {
         let mut balloon_deck = BalloonDeck::new(self.rng);
         balloon_deck.shuffle();
 
@@ -57,27 +58,25 @@ impl BalloonGame {
     }
 
     pub fn run_game(&mut self) -> usize {
-    	let mut nb_cards = 0;
+        let mut nb_cards = 0;
+        let mut current_player_index = 0;
 
-    	
-    	nb_cards
+        loop {
+            let p = &mut self.players[current_player_index];
+            let action = self.action_deck.deal();
+            p.play_card(action);
+            nb_cards += 1;
+            if p.has_lost() {
+                return nb_cards;
+            } else {
+                current_player_index = (current_player_index + 1) % self.players.len();
+            }
+        }
     }
 }
 
 fn main() {
-    let mut p = Player::new();
-    // p.deal(Balloons::Red);
-    // p.deal(Balloons::Green);
-    // p.deal(Balloons::Yellow);
-    // p.burst(Balloons::Blue);
-    // p.burst(Balloons::Red);
-
-    // p.recover();
-    // p.recover();
-    // p.burst(Balloons::Yellow);
-
     let mut balloon_game = BalloonGame::new(2, 5, 5);
-    balloon_game.deal_cards();
 
     println!("{}", balloon_game.run_game());
 }
