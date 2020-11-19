@@ -1,3 +1,14 @@
+# une partie avec les règles de base:
+
+```
+cargo build
+./target/release/multiple_games --nb_players 2  --nb_parents 5 --nb_cards 5 --nb_iterations 10000000 > data2/2-5-5-10000000.json
+source .env/bin/activate
+(.env) clem@mobius:~/dev/ballons$ python3 mk_rs_plot.py -f /home/clem/dev/ballons/data2/2-5-5-100000.json
+```
+
+![](./notes/2-5-5-10000000.png)
+
 # Énumération manuelle des mains possibles:
 
 11111

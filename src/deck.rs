@@ -82,7 +82,7 @@ impl ActionDeck {
     }
 
     pub fn fill(&mut self) {
-        for _ in 0..5 {
+        for _ in 0..4 {
             for c in &[
                 ActionCard::Red,
                 ActionCard::Yellow,

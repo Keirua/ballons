@@ -34,5 +34,5 @@ file_without_extension = os.path.splitext(args["file"])[0]
 output_diagram_file = "{}.png".format(file_without_extension)
 
 plt.bar(range(5, 100), data[5:100])
-plt.show()
+# plt.show()
 plt.savefig(output_diagram_file)
