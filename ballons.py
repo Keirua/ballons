@@ -44,6 +44,11 @@ class Player:
 	def has_lost(self):
 		return len(self.bursted_balloons) == self.nb_balloons
 
+	def hand_structure(self):
+		counts = sorted(self.balloons.values())
+		counts = filter(lambda item: item != 0, counts)
+		return "".join(map(str, counts))
+
 	def __repr__(self):
 		return json.dumps(self.balloons)
 
