@@ -40,16 +40,3 @@ source .env/bin/activate
 ```
 
 
-Énumération manuelle des mains possibles:
-
-11111
-2111
-311
-41
-5
-221
-32
-
-Dénombrement des différentes mains:
-
-https://perso.univ-rennes1.fr/philippe.roux/enseignement/proba1/exo762sol.pdf
