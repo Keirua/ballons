@@ -26,3 +26,9 @@ print({k: v for k, v in sorted(counts.items(), key=lambda item: item[1])})
 # {'5': 100, '14': 9426, '23': 37340, '11111': 58588, '113': 141093, '122': 283629, '1112': 469824}
 # {'5': 94,  '14': 9519, '23': 37610, '11111': 59149, '113': 141198, '122': 281279, '1112': 471151}
 # problem = quadratic convergence: having 1 more digit = 100 times more iterations
+# time python3 gen_hand_structure.py -p 5 -b 5 -i 1000000
+# {'5': 79, '14': 9387, '23': 37784, '11111': 58973, '113': 140978, '122': 282434, '1112': 470365}
+# 
+# real	0m19,588s
+# user	0m19,587s
+# sys	0m0,000s
