@@ -23,8 +23,8 @@ for i in range(args["nb_iterations"]):
 	game.run_game()
 	loser = game.current_player
 
-	counts[p0][p1][0] += 1
+	counts[p0][p1][1] += 1 # the total count of such encounters we faced
 	if loser == 1:
-		counts[p0][p1][1] += 1
+		counts[p0][p1][0] += 1 # how many times player 0 won (since player 1 lost)
 
 print(counts)

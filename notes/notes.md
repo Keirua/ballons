@@ -48,6 +48,12 @@ raw hand count with 1000000 hands:
 {'5': 100, '14': 9426, '23': 37340, '11111': 58588, '113': 141093, '122': 283629, '1112': 469824}
 {'5': 94,  '14': 9519, '23': 37610, '11111': 59149, '113': 141198, '122': 281279, '1112': 471151}
 problem = quadratic convergence: having 1 more digit = 100 times more iterations
+time python3 gen_hand_structure.py -p 5 -b 5 -i 1000000
+{'5': 79, '14': 9387, '23': 37784, '11111': 58973, '113': 140978, '122': 282434, '1112': 470365}
+
+real	0m19,588s
+user	0m19,587s
+sys	0m0,000s
 
 # most frequent hands
 ```
@@ -66,6 +72,39 @@ probabilité de les rencontrer:
 122, 28.2434
 1112, 47.0365
 
+47% des mains sont des 1112
+96% des mains sont des 1112, 122, 113, 11111
+
 ![](./notes/piechart.png)
 
 # Heatmap avec les probabilités de victoire en fonction des différentes rencontres de mains ?
+
+Certaines rencontres sont impossibles:
+ - 5 vs 11111
+Certaines sont très peu probables, donc il faut aider le destin pour en avoir:
+ - 5 vs 11111
+
+Dans une première approche, on génère
+
+On récupère les comptes de rencontres et de victoires:
+
+```bash
+time python3 gen_hand_heatmap.py -p 5 -b 5 -i 10000000
+{'1112': {'1112': [1096634, 2264360], '122': [534765, 1316073], '113': [199703, 633220], '11111': [169968, 292299], '23': [43289, 163734], '14': [5431, 37203], '5': [7, 314]}, '122': {'1112': [748418, 1317176], '122': [387001, 793237], '113': [159508, 408524], '11111': [108201, 163988], '23': [36298, 109777], '14': [5929, 30139], '5': [30, 379]}, '113': {'1112': [420634, 632480], '122': [242647, 409511], '113': [106885, 217067], '11111': [54222, 72753], '23': [26445, 61486], '14': [4603, 16608], '5': [21, 175]}, '11111': {'1112': [112353, 292343], '122': [51235, 163561], '113': [17070, 72373], '11111': [18536, 38556], '23': [3447, 18062], '14': [292, 2964], '5': [0, 0]}, '23': {'1112': [118097, 163429], '122': [71744, 109826], '113': [34123, 61269], '11111': [14407, 18205], '23': [9059, 18273], '14': [1761, 5487], '5': [11, 75]}, '14': {'1112': [31439, 37283], '122': [24018, 30261], '113': [11879, 16574], '11111': [2688, 3042], '23': [3644, 5433], '14': [765, 1513], '5': [6, 25]}, '5': {'1112': [306, 318], '122': [318, 344], '113': [170, 184], '11111': [0, 0], '23': [69, 80], '14': [15, 17], '5': [0, 0]}}
+
+real	9m57,285s
+user	9m57,191s
+sys	0m0,032s
+```
+on met ça dans plot_hand_heatmap.py:
+
+![](notes/heatmap.png)
+
+Le problème de cette approche, c’est qu’elle génère beaucoup de parties probables, mais les parties peu probables sont mal représentées (cf les chiffres dans `heatmap-naive.json`).
+Sur ces types de parties, il y a donc moins de parties simulées, et donc les chiffres de probabilités de victoires sont moins précis.
+
+Il faut un meilleur algorithme de génération de parties.
+
+Cependant, pour les parties fréquentes (carré avec '1112', '122' et '113'), on a déja pas mal de parties simulées et on pourrait déjà regarder les chiffres.
+
+Maintenant, il n’est pas nécessaire de générer tous les matchs ; seuls la moitié supérieure de la matrice des rencontres est nécessaire, l’autre peut être déduite (si a rencontre b et gagen dans x% des cas, lors de la rencontre b contre a la victoire aura lieu dans 100-x % des cas).
