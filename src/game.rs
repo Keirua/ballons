@@ -38,6 +38,27 @@ impl BalloonGame {
         balloon_game
     }
 
+    // pub fn new_with_known_hands(
+    //     hand1,
+    //     hand2
+    // ) -> BalloonGame {
+    //     let rng = thread_rng();
+
+    //     let players = Vec::with_capacity(2);
+
+    //     let mut balloon_game = BalloonGame {
+    //         2,
+    //         5,
+    //         players,
+    //         action_deck: ActionDeck::new(nb_parent_cards, rng),
+    //         rng,
+    //     };
+
+    //     balloon_game.action_deck.shuffle();
+
+    //     balloon_game
+    // }
+
     fn deal_cards(&mut self) {
         let mut balloon_deck = BalloonDeck::new(self.rng);
         balloon_deck.shuffle();

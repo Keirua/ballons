@@ -19,11 +19,13 @@ hands_structure = [
    "221",
    "2111"
 ]
-counts = {}
-for hand0 in hands_structure:
-	counts[hand0] = {}
-	for hand1 in hands_structure:
-		counts[hand0][hand1] = [0, 0]
+# counts = {}
+# for hand0 in hands_structure:
+# 	counts[hand0] = {}
+# 	for hand1 in hands_structure:
+# 		counts[hand0][hand1] = [0, 0]
+import pickle
+counts = pickle.load(open("notes/results.p", "rb"))
 
 hands = {
 	"11111": gen11111(),
@@ -45,6 +47,9 @@ def generate_valid_encounters(hands1, hands2):
 
 for hand1 in hands.keys():
 	for hand2 in hands.keys():
+		if counts[hand1][hand2][0] > args["nb_iterations"]:
+			continue
+
 		valid_encounters = generate_valid_encounters(hands[hand1], hands[hand2])
 
 		if len(valid_encounters) > 0:
