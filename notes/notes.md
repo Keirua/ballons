@@ -108,3 +108,24 @@ Il faut un meilleur algorithme de génération de parties.
 Cependant, pour les parties fréquentes (carré avec '1112', '122' et '113'), on a déja pas mal de parties simulées et on pourrait déjà regarder les chiffres.
 
 Maintenant, il n’est pas nécessaire de générer tous les matchs ; seuls la moitié supérieure de la matrice des rencontres est nécessaire, l’autre peut être déduite (si a rencontre b et gagen dans x% des cas, lors de la rencontre b contre a la victoire aura lieu dans 100-x % des cas).
+
+
+# Génération de toutes les mains possibles
+
+
+## Nombre de mains par types de mains
+
+il se trouve qu’il y a beaucoup de symétries et qu’il y a au final assez peu de mains différents.
+
+Voici le nombre de mains par types de mains:
+
+```
+$ time python3 gen_every_hands.py 
+11111 	1
+5 		5
+41 		20
+32 		20
+311 	60
+221 	60
+2111 	120
+```

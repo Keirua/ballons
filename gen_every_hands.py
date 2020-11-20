@@ -9,7 +9,7 @@ def colors():
 	return set([RED, BLUE, GREEN, YELLOW, PURPLE])
  
 
-# So we have 7 kind of hands, 
+# So we have 7 kind of hands, and we need to generate every possible hand for all of them
 
 def gen11111():
 	return [colors()]
@@ -54,31 +54,52 @@ def gen2111():
 					hands.append([c1]*2 + [c2, c3, c4])
 	return hands
 
+def hand_to_str(hand):
+	out = ""
+	mapping = {
+		RED: "R",
+		BLUE: "B",
+		GREEN: "G",
+		YELLOW: "Y",
+		PURPLE: "P"
+	}
 
-print("11111")
-print(gen11111())
-print("")
+	for c in hand:
+		out += mapping[c]
+	return out
 
-print("5")
-print(gen5())
-print("")
+def dump_hands(hand_name, hands):
+	with open("data2/hands/{}.txt".format(hand_name), 'w') as f:
+		for item in hands:
+			f.write("%s\n" % hand_to_str(item))
 
-print("41")
-print(gen41())
-print("")
+def is_valid_encounter(h1, h2):
+	colors = {
+		RED: 0,
+		BLUE: 0,
+		GREEN: 0,
+		YELLOW: 0,
+		PURPLE: 0,
+	}
+	for c in h1:
+		colors[c] += 1
+	for c in h2:
+		colors[c] += 1
+	for c in colors():
+		if colors[c] > 5:
+			return False
+	return True
 
-print("32")
-print(gen32())
-print("")
+hands = {
+	"11111": gen11111(),
+	"5": gen5(),
+	"41": gen41(),
+	"32": gen32(),
+	"311": gen311(),
+	"221": gen221(),
+	"2111": gen2111()
+}
 
-print("311")
-print(gen311())
-print("")
-
-print("221")
-print(gen221())
-print("")
-
-print("2111")
-print(gen2111())
-print("")
+for hand in hands.keys():
+	print("{}\t{}".format(hand, len(hands[hand])))
+	dump_hands(hand, hands[hand])
