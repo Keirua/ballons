@@ -20,6 +20,10 @@ class Player:
 		for v in [RED, BLUE, GREEN, YELLOW, PURPLE]:
 			self.balloons[v] = 0
 
+	def deal_hand(self, hand):
+		for b in hand:
+			self.deal_balloon(b)
+
 	def deal_balloon(self, balloon):
 		self.balloons[balloon] += 1
 		self.nb_balloons += 1
@@ -74,6 +78,15 @@ class BalloonGame:
 		# pick a random first player
 		self.current_player = 0 # chosen with fair dice
 
+	def create_2_player_game_with_known_hands(hand1, hand2):
+		game = BalloonGame(2, 5, 5)
+
+		# override hands with custom selection
+		game.players = [Player() for p in range(2)]
+		game.players[0].deal_hand(hand1)
+		game.players[1].deal_hand(hand2)
+		return game
+
 	def generate_balloon_deck(self):
 		deck = []
 
@@ -125,3 +138,22 @@ class BalloonGame:
 	def __repr__(self):
 		return "\n".join(["{}".format(p) for p in self.players])
 
+
+
+
+class BalloonGameWithKnownHands(BalloonGame):
+	def __init__(self, hand1, hand2):
+		self.nb_players = 2
+		self.nb_cards_per_player = 5
+		self.nb_parent_cards = 5
+		# Create a random action deck with
+		self.actions = self.generate_actions_deck(self.nb_parent_cards)
+		deck = self.generate_balloon_deck()
+
+		# override hands with custom selection
+		self.players = [Player() for p in range(2)]
+		self.players[0].deal_hand(hand1)
+		self.players[1].deal_hand(hand2)
+
+		# pick a random first player
+		self.current_player = 0 # chosen with fair dice
