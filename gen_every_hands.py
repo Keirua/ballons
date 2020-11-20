@@ -12,7 +12,7 @@ def colors():
 # So we have 7 kind of hands, and we need to generate every possible hand for all of them
 
 def gen11111():
-	return [colors()]
+	return [[c for c in colors()]]
 
 def gen5():
 	hands = [ [c]*5 for c in colors()]
@@ -73,22 +73,35 @@ def dump_hands(hand_name, hands):
 		for item in hands:
 			f.write("%s\n" % hand_to_str(item))
 
+def dump_encounters(encounter_name, encounters):
+	with open("data2/valid-encounters/{}.txt".format(encounter_name), 'w') as f:
+		for h1, h2 in encounters:
+			f.write("%s-%s\n" % (hand_to_str(h1), (hand_to_str(h2))))
+
 def is_valid_encounter(h1, h2):
-	colors = {
+	counts = {
 		RED: 0,
 		BLUE: 0,
 		GREEN: 0,
 		YELLOW: 0,
 		PURPLE: 0,
 	}
-	for c in h1:
-		colors[c] += 1
-	for c in h2:
-		colors[c] += 1
-	for c in colors():
-		if colors[c] > 5:
+	for c in list(h1):
+		counts[c] += 1
+	for c in list(h2):
+		counts[c] += 1
+	for c in [RED, BLUE, GREEN, YELLOW, PURPLE]:
+		if counts[c] > 5:
 			return False
 	return True
+
+def generate_valid_encounters(hands1, hands2):
+	valid_encounters = []
+	for h1 in hands[hand1]:
+		for h2 in hands[hand2]:
+			if is_valid_encounter(h1, h2):
+				valid_encounters.append([h1, h2])
+	return valid_encounters
 
 hands = {
 	"11111": gen11111(),
@@ -103,3 +116,11 @@ hands = {
 for hand in hands.keys():
 	print("{}\t{}".format(hand, len(hands[hand])))
 	dump_hands(hand, hands[hand])
+
+
+for hand1 in hands.keys():
+	for hand2 in hands.keys():
+		valid_encounters = generate_valid_encounters(hands[hand1], hands[hand2])
+		dump_encounters("{}-{}".format(hand1, hand2), valid_encounters)
+	# print("{}\t{}".format(hand, len(hands[hand])))
+	# dump_hands(hand, hands[hand])
