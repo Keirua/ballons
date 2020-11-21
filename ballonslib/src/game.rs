@@ -1,4 +1,5 @@
 use crate::deck::{ActionDeck, BalloonDeck};
+use crate::ballons::{Balloons};
 use crate::player::Player;
 
 use rand::rngs::ThreadRng;
@@ -38,26 +39,28 @@ impl BalloonGame {
         balloon_game
     }
 
-    // pub fn new_with_known_hands(
-    //     hand1,
-    //     hand2
-    // ) -> BalloonGame {
-    //     let rng = thread_rng();
+    pub fn new_with_known_hands(
+        hand1: Vec<Balloons>,
+        hand2: Vec<Balloons>
+    ) -> BalloonGame {
+        let rng = thread_rng();
 
-    //     let players = Vec::with_capacity(2);
+        let mut players = Vec::with_capacity(2);
+        players.push(Player::new_with_hand(hand1));
+        players.push(Player::new_with_hand(hand2));
 
-    //     let mut balloon_game = BalloonGame {
-    //         2,
-    //         5,
-    //         players,
-    //         action_deck: ActionDeck::new(nb_parent_cards, rng),
-    //         rng,
-    //     };
+        let mut balloon_game = BalloonGame {
+            nb_players: 2,
+            nb_balloons_per_player: 5,
+            players,
+            action_deck: ActionDeck::new(5, rng),
+            rng,
+        };
 
-    //     balloon_game.action_deck.shuffle();
+        balloon_game.action_deck.shuffle();
 
-    //     balloon_game
-    // }
+        balloon_game
+    }
 
     fn deal_cards(&mut self) {
         let mut balloon_deck = BalloonDeck::new(self.rng);

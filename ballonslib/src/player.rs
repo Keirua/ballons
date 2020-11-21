@@ -23,6 +23,19 @@ impl Player {
         p
     }
 
+    pub fn new_with_hand(hand: Vec<Balloons>) -> Player {
+        let mut p = Player {
+            ballons: HashMap::new(),
+            returned_balloons: Vec::new(),
+            nb_cards: 0,
+        };
+        for b in hand.iter() {
+            p.deal(*b);
+        }
+
+        p
+    }
+
     pub fn deal(&mut self, b: Balloons) {
         let count = self.ballons.entry(b).or_insert(0);
         *count += 1;
