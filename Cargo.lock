@@ -24,8 +24,15 @@ dependencies = [
 name = "ballons"
 version = "0.1.0"
 dependencies = [
- "rand",
+ "ballonslib",
  "structopt",
+]
+
+[[package]]
+name = "ballonslib"
+version = "0.1.0"
+dependencies = [
+ "rand",
 ]
 
 [[package]]

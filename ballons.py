@@ -138,9 +138,6 @@ class BalloonGame:
 	def __repr__(self):
 		return "\n".join(["{}".format(p) for p in self.players])
 
-
-
-
 class BalloonGameWithKnownHands(BalloonGame):
 	def __init__(self, hand1, hand2):
 		self.nb_players = 2

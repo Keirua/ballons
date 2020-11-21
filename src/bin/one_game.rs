@@ -1,5 +1,5 @@
-extern crate ballons;
-use ballons::game::BalloonGame;
+extern crate ballonslib;
+use ballonslib::game::BalloonGame;
 
 use structopt::StructOpt;
 
