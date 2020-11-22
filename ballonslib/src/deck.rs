@@ -102,8 +102,6 @@ impl ActionDeck {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::rngs::ThreadRng;
-    use rand::thread_rng;
 
     #[test]
     fn test_greet() {

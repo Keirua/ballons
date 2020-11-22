@@ -4,6 +4,14 @@ from random import choice
 
 import argparse
 
+from cffi import FFI
+ffi = FFI()
+ffi.cdef("""
+    bool run_game_with_known_hand(unsigned int* hand1, unsigned int* hand2, unsigned int length);
+""")
+
+C = ffi.dlopen("./ballonslib/target/release/libballonslib.so")
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--nb_parents", required=False, help="number of parent cards [0, 1, 2, 3, 4, 5]", default=5, type=int)
 ap.add_argument("-b", "--nb_balloons", required=False, help="number of balloons per player [1, 2, 3, 4, 5]", default=5, type=int)
@@ -19,13 +27,13 @@ hands_structure = [
    "221",
    "2111"
 ]
-# counts = {}
-# for hand0 in hands_structure:
-# 	counts[hand0] = {}
-# 	for hand1 in hands_structure:
-# 		counts[hand0][hand1] = [0, 0]
-import pickle
-counts = pickle.load(open("notes/results.p", "rb"))
+counts = {}
+for hand0 in hands_structure:
+	counts[hand0] = {}
+	for hand1 in hands_structure:
+		counts[hand0][hand1] = [0, 0]
+# import pickle
+# counts = pickle.load(open("notes/results.p", "rb"))
 
 hands = {
 	"11111": gen11111(),
@@ -45,14 +53,6 @@ def generate_valid_encounters(hands1, hands2):
 				valid_encounters.append([h1, h2])
 	return valid_encounters
 
-def is_first_player_winner(hand0, hand1):
-	game = BalloonGameWithKnownHands(hand0, hand1)
-
-	game.run_game()
-	loser = game.current_player
-	return loser == 1
-
-
 for hand1 in hands.keys():
 	for hand2 in hands.keys():
 		if counts[hand1][hand2][0] > args["nb_iterations"]:
@@ -66,7 +66,9 @@ for hand1 in hands.keys():
 				encounter = choice(valid_encounters)
 
 				counts[hand1][hand2][1] += 1 # the total count of such encounters we faced
-				if is_first_player_winner(encounter[0], encounter[1]):
+				# print(encounter[0])
+				# print(encounter[1])
+				if C.run_game_with_known_hand(encounter[0], encounter[1], 5):
 					counts[hand1][hand2][0] += 1 # how many times player 0 won (since player 1 lost)
 
 print(counts)

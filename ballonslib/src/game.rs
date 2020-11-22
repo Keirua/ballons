@@ -1,5 +1,5 @@
+use crate::ballons::Balloons;
 use crate::deck::{ActionDeck, BalloonDeck};
-use crate::ballons::{Balloons};
 use crate::player::Player;
 
 use rand::rngs::ThreadRng;
@@ -9,7 +9,7 @@ use rand::thread_rng;
 pub struct BalloonGame {
     nb_players: usize,
     nb_balloons_per_player: usize,
-    players: Vec<Player>,
+    pub players: Vec<Player>,
     action_deck: ActionDeck,
     rng: ThreadRng,
 }
@@ -31,7 +31,7 @@ impl BalloonGame {
         };
 
         for _ in 0..nb_players {
-            balloon_game.players.push(Player::new());
+            balloon_game.players.push(Player::default());
         }
         balloon_game.deal_cards();
         balloon_game.action_deck.shuffle();
@@ -39,10 +39,7 @@ impl BalloonGame {
         balloon_game
     }
 
-    pub fn new_with_known_hands(
-        hand1: Vec<Balloons>,
-        hand2: Vec<Balloons>
-    ) -> BalloonGame {
+    pub fn new_with_known_hands(hand1: Vec<Balloons>, hand2: Vec<Balloons>) -> BalloonGame {
         let rng = thread_rng();
 
         let mut players = Vec::with_capacity(2);

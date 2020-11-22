@@ -9,7 +9,7 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new() -> Player {
+    pub fn default() -> Player {
         let mut p = Player {
             ballons: HashMap::new(),
             returned_balloons: Vec::new(),
@@ -79,7 +79,7 @@ mod tests {
 
     #[test]
     fn test_run_game() {
-        let mut p = Player::new();
+        let mut p = Player::default();
         p.deal(Balloons::Red);
         p.deal(Balloons::Green);
         p.deal(Balloons::Yellow);
@@ -99,7 +99,7 @@ mod tests {
 
     #[test]
     fn test_has_lost() {
-        let mut p = Player::new();
+        let mut p = Player::default();
         p.deal(Balloons::Red);
         p.deal(Balloons::Green);
 
