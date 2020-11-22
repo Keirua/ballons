@@ -16,18 +16,18 @@ class Player:
 		self.balloons = {}
 		self.bursted_balloons = []
 		self.nb_balloons = 0
-		self.memory_of_actions = {}
+		self.remaining_cards = {}
 
 		for v in [RED, BLUE, GREEN, YELLOW, PURPLE]:
 			self.balloons[v] = 0
 		
-		self.reset_memory()
+		self.reset_memory_of_remaining_cards()
 
-	def reset_memory(self):
+	def reset_memory_of_remaining_cards(self):
 		for v in [RED, BLUE, GREEN, YELLOW, PURPLE]:
-			self.memory_of_actions[v] = 4
+			self.remaining_cards[v] = 4
 
-		self.memory_of_actions[PARENT] = 5
+		self.remaining_cards[PARENT] = 5
 
 	def deal_hand(self, hand):
 		for b in hand:
@@ -44,13 +44,14 @@ class Player:
 			self.burst_ballon(action)
 
 	def recover_balloon(self):
+		# random play: among the bursted balloons, we randomly recover one
 		shuffle(self.bursted_balloons)
 		if len(self.bursted_balloons) > 0:
 			balloon = self.bursted_balloons.pop()
 			self.balloons[balloon] += 1
 
 	def notify(self, action_card):
-		self.memory_of_actions[action_card] -= 1
+		self.remaining_cards[action_card] -= 1
 
 	def burst_ballon(self, balloon):
 		if self.balloons[balloon] > 0:
@@ -71,10 +72,23 @@ class Player:
 
 class CounterPlayer(Player):
 	def recover_balloon(self):
-		shuffle(self.bursted_balloons)
-		if len(self.bursted_balloons) > 0:
-			balloon = self.bursted_balloons.pop()
-			self.balloons[balloon] += 1
+		nb_burst_balloons = len(self.bursted_balloons)
+		if nb_burst_balloons > 0:
+			# if we have more than one bursted balloon, maybe we can improve our odds ?
+			if nb_burst_balloons > 1:
+				# simple heuristic: if we want to stay longer in game, among all the bursted balloons we have,
+				# we simply recover the one that has the least cards remaining in the deck
+				best_count = 6
+				best_balloon = None
+				for b in self.bursted_balloons:
+					if self.remaining_cards[b] < best_count:
+						best_count = self.remaining_cards[b]
+						best_balloon = b
+				self.bursted_balloons.remove(best_balloon)
+				self.balloons[best_balloon] += 1
+			else:
+				balloon = self.bursted_balloons.pop()
+				self.balloons[balloon] += 1
 
 
 	def __repr__(self):
@@ -150,7 +164,7 @@ class BalloonGame:
 		if len(self.actions) == 0:
 			self.actions = self.generate_actions_deck(self.nb_parent_cards)
 			for p in self.players:
-				p.reset_memory()
+				p.reset_memory_of_remaining_cards()
 		return action
 
 	def change_player(self):
