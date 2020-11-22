@@ -59,6 +59,13 @@ impl BalloonGame {
         balloon_game
     }
 
+    pub fn new_with_known_hands_and_counter(hand1: Vec<Balloons>, hand2: Vec<Balloons>) -> BalloonGame {
+        let mut game = BalloonGame::new_with_known_hands(hand1, hand2);
+        game.players[0].set_counter(true);
+
+        balloon_game
+    }
+
     fn deal_cards(&mut self) {
         let mut balloon_deck = BalloonDeck::new(self.rng);
         balloon_deck.shuffle();
@@ -84,6 +91,9 @@ impl BalloonGame {
             if p.has_lost() {
                 return nb_cards;
             } else {
+                for player in self.players.iter_mut() {
+                    player.notify(action);
+                }
                 current_player_index = (current_player_index + 1) % self.players.len();
             }
         }

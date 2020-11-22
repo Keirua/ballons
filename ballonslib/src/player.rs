@@ -57,6 +57,10 @@ impl Player {
         }
     }
 
+    pub fn notify(&mut self, c: ActionCard) {
+
+    }
+
     fn burst(&mut self, b: Balloons) {
         let count = self.ballons.entry(b).or_insert(0);
         if *count > 0 {

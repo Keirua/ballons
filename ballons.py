@@ -16,9 +16,18 @@ class Player:
 		self.balloons = {}
 		self.bursted_balloons = []
 		self.nb_balloons = 0
+		self.memory_of_actions = {}
 
 		for v in [RED, BLUE, GREEN, YELLOW, PURPLE]:
 			self.balloons[v] = 0
+		
+		self.reset_memory()
+
+	def reset_memory(self):
+		for v in [RED, BLUE, GREEN, YELLOW, PURPLE]:
+			self.memory_of_actions[v] = 4
+
+		self.memory_of_actions[PARENT] = 5
 
 	def deal_hand(self, hand):
 		for b in hand:
@@ -40,6 +49,9 @@ class Player:
 			balloon = self.bursted_balloons.pop()
 			self.balloons[balloon] += 1
 
+	def notify(self, action_card):
+		self.memory_of_actions[action_card] -= 1
+
 	def burst_ballon(self, balloon):
 		if self.balloons[balloon] > 0:
 			self.balloons[balloon] -= 1
@@ -52,6 +64,18 @@ class Player:
 		counts = sorted(self.balloons.values())
 		counts = filter(lambda item: item != 0, counts)
 		return "".join(map(str, counts))
+
+	def __repr__(self):
+		return json.dumps(self.balloons)
+
+
+class CounterPlayer(Player):
+	def recover_balloon(self):
+		shuffle(self.bursted_balloons)
+		if len(self.bursted_balloons) > 0:
+			balloon = self.bursted_balloons.pop()
+			self.balloons[balloon] += 1
+
 
 	def __repr__(self):
 		return json.dumps(self.balloons)
@@ -113,6 +137,8 @@ class BalloonGame:
 	def play_action_card(self):
 		action = self.pick_action_card()
 		self.players[self.current_player].play_action_card(action)
+		for p in self.players:
+				p.notify(action)
 		if self.players[self.current_player].has_lost():
 			return False
 		else:
@@ -123,6 +149,8 @@ class BalloonGame:
 		action = self.actions.pop()
 		if len(self.actions) == 0:
 			self.actions = self.generate_actions_deck(self.nb_parent_cards)
+			for p in self.players:
+				p.reset_memory()
 		return action
 
 	def change_player(self):
@@ -149,6 +177,24 @@ class BalloonGameWithKnownHands(BalloonGame):
 
 		# override hands with custom selection
 		self.players = [Player() for p in range(2)]
+		self.players[0].deal_hand(hand1)
+		self.players[1].deal_hand(hand2)
+
+		# pick a random first player
+		self.current_player = 0 # chosen with fair dice
+
+
+class BalloonGameWithKnownHandsAndCounter(BalloonGame):
+	def __init__(self, hand1, hand2):
+		self.nb_players = 2
+		self.nb_cards_per_player = 5
+		self.nb_parent_cards = 5
+		# Create a random action deck with
+		self.actions = self.generate_actions_deck(self.nb_parent_cards)
+		deck = self.generate_balloon_deck()
+
+		# override hands with custom selection
+		self.players = [CounterPlayer(), Player()]
 		self.players[0].deal_hand(hand1)
 		self.players[1].deal_hand(hand2)
 
